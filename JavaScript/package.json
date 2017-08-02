@@ -1,0 +1,16 @@
+{
+  "name": "js-ds-and-algs",
+  "version": "0.0.0",
+  "description": "JavaScript implementation of different data structures and alorigthms for learning purposes",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Stanislav Sysoev <@d4rkr00t>",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^20.0.4"
+  },
+  "jest": {
+    "testRegex": ".*\\.test\\.jsx?$"
+  }
+}
