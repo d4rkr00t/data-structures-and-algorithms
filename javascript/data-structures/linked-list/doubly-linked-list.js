@@ -16,26 +16,11 @@
  * insert:       O(n)
  * reverse:      O(n)
  */
-class SinglyLinkedList {
+class DoublyLinkedList {
   constructor() {
     this.head = null;
     this.tail = null;
     this.size = 0;
-  }
-
-  /**
-   * Looks up for a list item which previous to given list item.
-   *
-   * @param {ListItem} listItem
-   * @return {ListItem}
-   */
-  _findPrev(listItem) {
-    let prev = this.head;
-    while (prev && prev.next !== listItem) {
-      prev = prev.next;
-    }
-
-    return prev;
   }
 
   /**
@@ -130,6 +115,7 @@ class SinglyLinkedList {
     if (!this.head && !this.tail) {
       this.head = this.tail = listItem;
     } else {
+      this.head.prev = listItem;
       this.head = listItem;
     }
   }
@@ -154,6 +140,7 @@ class SinglyLinkedList {
       this.head = this.tail = null;
     } else {
       this.head = this.head.next;
+      this.head.prev = null;
     }
 
     return data;
@@ -172,7 +159,7 @@ class SinglyLinkedList {
 
     this.size++;
 
-    const listItem = new ListItem(data);
+    const listItem = new ListItem(data, null, this.tail);
     this.tail.next = listItem;
     this.tail = listItem;
   }
@@ -196,14 +183,7 @@ class SinglyLinkedList {
     if (this.head === this.tail) {
       this.head = this.tail = null;
     } else {
-      // Otherwise looking for item that has tail as its next item.
-      let prev = this.head;
-
-      while (prev.next !== this.tail) {
-        prev = prev.next;
-      }
-
-      this.tail = prev;
+      this.tail = this.tail.prev;
     }
 
     return data;
@@ -269,9 +249,8 @@ class SinglyLinkedList {
     }
 
     // Otherwise looking for item that has provided list item as its next item.
-    const prev = this._findPrev(listItem);
+    listItem.prev.next = listItem.next;
     this.size--;
-    prev.next = listItem.next;
   }
 
   /**
@@ -302,9 +281,9 @@ class SinglyLinkedList {
       return this.unshift(data);
     }
 
-    const prev = this._findPrev(listItem);
-    const newListItem = new ListItem(data, listItem);
-    prev.next = newListItem;
+    const newListItem = new ListItem(data, listItem, listItem.prev);
+    listItem.prev.next = newListItem;
+    listItem.prev = newListItem;
     this.size++;
   }
 
@@ -314,7 +293,7 @@ class SinglyLinkedList {
    * @return {SingleLinkedList}
    */
   reverse() {
-    const list = new SinglyLinkedList();
+    const list = new DoublyLinkedList();
     while (this.head) {
       list.unshift(this.shift());
     }
@@ -323,10 +302,11 @@ class SinglyLinkedList {
 }
 
 class ListItem {
-  constructor(data, next = null) {
+  constructor(data, next = null, tail = null) {
     this.data = data;
     this.next = next;
+    this.prev = tail;
   }
 }
 
-module.exports = SinglyLinkedList;
+module.exports = DoublyLinkedList;
